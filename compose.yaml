@@ -6,7 +6,7 @@ services:
       - 'MYSQL_DATABASE=binaa_center'
       - 'MYSQL_ROOT_PASSWORD=root'
     ports:
-      - '3306:3306'
+      - '3306'
     volumes:
       - mysql_data:/var/lib/mysql
     healthcheck:
@@ -14,6 +14,17 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    restart: unless-stopped
+    # Add these for development
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --skip-character-set-client-handshake
 
 volumes:
   mysql_data:
+    name: binaa-mysql-data
+
+networks:
+  default:
+    name: binaa-network
