@@ -1,4 +1,4 @@
-package com.novavista.binaa.center.configs;
+package com.novavista.binaa.center.config;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
