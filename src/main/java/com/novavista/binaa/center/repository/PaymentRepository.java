@@ -6,6 +6,8 @@ import com.novavista.binaa.center.enums.PaymentStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 
@@ -13,5 +15,7 @@ import java.util.List;
 public interface PaymentRepository extends JpaRepository<Payment, Long> {
     List<Payment> findByCaseInfo(Case caseInfo);
     List<Payment> findByPaymentStatus(PaymentStatus status);
+    List<Payment> findByPaymentDateBetween(LocalDateTime start, LocalDateTime end);
+
 }
 

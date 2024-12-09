@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -132,5 +133,16 @@ public class PaymentServiceImpl implements PaymentService {
         if (paymentDTO.getPaymentStatus() == null) {
             throw new ValidationException("Payment status is required");
         }
+    }
+
+    @Transactional(readOnly = true)
+    public List<PaymentDTO> getPaymentsByDateRange(LocalDate start, LocalDate end) {
+        LocalDateTime startDateTime = start.atStartOfDay();
+        LocalDateTime endDateTime = end.atTime(23, 59, 59, 999999999);
+
+        return paymentRepository.findByPaymentDateBetween(startDateTime, endDateTime)
+                .stream()
+                .map(payment -> modelMapper.map(payment, PaymentDTO.class))
+                .collect(Collectors.toList());
     }
 }

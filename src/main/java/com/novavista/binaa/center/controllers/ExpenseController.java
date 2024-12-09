@@ -46,11 +46,11 @@ public class ExpenseController {
         return ResponseEntity.ok(expenseService.getExpensesByCategory(category));
     }
 
-    @GetMapping("/dateRange")
+    @GetMapping("/by-date-range")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<ExpenseDTO>> getExpensesByDateRange(
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate start,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate end) {
+            @RequestParam("start") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME, fallbackPatterns = {"yyyy-MM-dd"}) LocalDate start,
+            @RequestParam("end") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME, fallbackPatterns = {"yyyy-MM-dd"}) LocalDate end) {
         log.info("Fetching expenses between {} and {}", start, end);
         return ResponseEntity.ok(expenseService.getExpensesByDateRange(start, end));
     }
