@@ -7,6 +7,7 @@ import java.util.List;
 public interface AssessmentService {
     AssessmentDTO createAssessment(AssessmentDTO assessmentDTO);
     AssessmentDTO getAssessmentById(Long id);
+    List<AssessmentDTO> getAllAssessments();
     List<AssessmentDTO> getAssessmentsByCase(Long caseId);
     List<AssessmentDTO> getAssessmentsByStatus(AssessmentStatus status);
     AssessmentDTO updateAssessment(Long id, AssessmentDTO assessmentDTO);

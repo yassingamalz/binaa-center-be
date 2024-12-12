@@ -30,6 +30,13 @@ public class AssessmentController {
         return new ResponseEntity<>(assessmentService.createAssessment(assessmentDTO), HttpStatus.CREATED);
     }
 
+    @GetMapping
+    @PreAuthorize("hasAnyRole('ADMIN', 'STAFF')")
+    public ResponseEntity<List<AssessmentDTO>> getAllAssessments() {
+        log.info("Fetching all assessments");
+        return ResponseEntity.ok(assessmentService.getAllAssessments());
+    }
+
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyRole('ADMIN', 'STAFF')")
     public ResponseEntity<AssessmentDTO> getAssessmentById(@PathVariable Long id) {

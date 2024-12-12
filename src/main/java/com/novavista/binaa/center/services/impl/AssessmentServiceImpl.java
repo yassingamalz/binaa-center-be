@@ -81,6 +81,15 @@ public class AssessmentServiceImpl implements AssessmentService {
 
     @Override
     @Transactional(readOnly = true)
+    public List<AssessmentDTO> getAllAssessments() {
+        log.info("Fetching all assessments");
+        return assessmentRepository.findAll().stream()
+                .map(assessment -> modelMapper.map(assessment, AssessmentDTO.class))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public List<AssessmentDTO> getAssessmentsByStatus(AssessmentStatus status) {
         return assessmentRepository.findByStatus(status).stream()
                 .map(assessment -> modelMapper.map(assessment, AssessmentDTO.class))
