@@ -83,6 +83,15 @@ public class SessionServiceImpl implements SessionService {
 
     @Override
     @Transactional(readOnly = true)
+    public List<SessionDTO> getAllSessions() {
+        log.info("Fetching all sessions");
+        return sessionRepository.findAll().stream()
+                .map(session -> modelMapper.map(session, SessionDTO.class))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public List<SessionDTO> getSessionsByDateRange(LocalDateTime start, LocalDateTime end) {
         return sessionRepository.findBySessionDateBetween(start, end).stream()
                 .map(session -> modelMapper.map(session, SessionDTO.class))

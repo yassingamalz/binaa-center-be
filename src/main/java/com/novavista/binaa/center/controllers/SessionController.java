@@ -45,6 +45,12 @@ public class SessionController {
         return ResponseEntity.ok(sessionService.getSessionsByCase(caseId));
     }
 
+    @GetMapping
+    @PreAuthorize("hasAnyRole('ADMIN', 'STAFF')")
+    public ResponseEntity<List<SessionDTO>> getAllSessions() {
+        log.info("Fetching all sessions");
+        return ResponseEntity.ok(sessionService.getAllSessions());
+    }
     @GetMapping("/dateRange")
     @PreAuthorize("hasAnyRole('ADMIN', 'STAFF')")
     public ResponseEntity<List<SessionDTO>> getSessionsByDateRange(
