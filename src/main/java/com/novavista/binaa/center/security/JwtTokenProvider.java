@@ -1,6 +1,7 @@
 package com.novavista.binaa.center.security;
 
 
+import com.novavista.binaa.center.entity.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -22,12 +23,16 @@ public class JwtTokenProvider {
     private long jwtExpirationInMs;
 
     public String generateToken(Authentication authentication) {
-        UserDetails userPrincipal = (UserDetails) authentication.getPrincipal();
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        User user = ((CustomUserDetails) userDetails).getUser();
+
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + jwtExpirationInMs);
 
         return Jwts.builder()
-                .setSubject(userPrincipal.getUsername())
+                .setSubject(user.getUsername())
+                .claim("userId", user.getUserId())
+                .claim("role", user.getRole().name())
                 .setIssuedAt(new Date())
                 .setExpiration(expiryDate)
                 .signWith(SignatureAlgorithm.HS512, jwtSecret)
