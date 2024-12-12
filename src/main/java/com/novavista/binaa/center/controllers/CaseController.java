@@ -11,6 +11,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
 @RestController
 @RequestMapping("/api/cases")
 @Slf4j
@@ -20,6 +21,13 @@ public class CaseController {
     @Autowired
     public CaseController(CaseService caseService) {
         this.caseService = caseService;
+    }
+
+    @GetMapping
+    @PreAuthorize("hasAnyRole('ADMIN', 'STAFF')")
+    public ResponseEntity<List<CaseDTO>> getAllCases() {
+        log.info("Fetching all cases");
+        return ResponseEntity.ok(caseService.getAllCases());
     }
 
     @PostMapping
@@ -48,6 +56,13 @@ public class CaseController {
     public ResponseEntity<List<CaseDTO>> searchCases(@RequestParam String name) {
         log.info("Searching cases with name: {}", name);
         return ResponseEntity.ok(caseService.searchCasesByName(name));
+    }
+
+    @GetMapping("/status/{status}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'STAFF')")
+    public ResponseEntity<List<CaseDTO>> getCasesByStatus(@PathVariable String status) {
+        log.info("Fetching cases with status: {}", status);
+        return ResponseEntity.ok(caseService.getCasesByStatus(status));
     }
 
     @PutMapping("/{id}")

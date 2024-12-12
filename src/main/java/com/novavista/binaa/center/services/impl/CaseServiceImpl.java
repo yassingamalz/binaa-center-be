@@ -51,6 +51,32 @@ public class CaseServiceImpl implements CaseService {
 
     @Override
     @Transactional(readOnly = true)
+    public List<CaseDTO> getAllCases() {
+        log.info("Fetching all cases");
+        return caseRepository.findAll().stream()
+                .map(caseEntity -> modelMapper.map(caseEntity, CaseDTO.class))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<CaseDTO> getCasesByStatus(String status) {
+        log.info("Fetching cases with status: {}", status);
+        CaseStatus caseStatus;
+        try {
+            caseStatus = CaseStatus.valueOf(status.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            log.error("Invalid case status: {}", status);
+            throw new ValidationException("Invalid case status: " + status);
+        }
+
+        return caseRepository.findByStatus(caseStatus).stream()
+                .map(caseEntity -> modelMapper.map(caseEntity, CaseDTO.class))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public List<CaseDTO> getAllActiveCases() {
         return caseRepository.findByStatus(CaseStatus.ACTIVE).stream()
                 .map(caseEntity -> modelMapper.map(caseEntity, CaseDTO.class))

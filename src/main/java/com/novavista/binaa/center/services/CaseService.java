@@ -6,6 +6,8 @@ import java.util.List;
 public interface CaseService {
     CaseDTO createCase(CaseDTO caseDTO);
     CaseDTO getCaseById(Long id);
+    List<CaseDTO> getAllCases();
+    List<CaseDTO> getCasesByStatus(String status);
     List<CaseDTO> getAllActiveCases();
     List<CaseDTO> searchCasesByName(String name);
     CaseDTO updateCase(Long id, CaseDTO caseDTO);
