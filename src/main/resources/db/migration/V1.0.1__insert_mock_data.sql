@@ -176,3 +176,10 @@ INSERT INTO rewards (
 ('جلسة مجانية', 500, 'جلسة علاج مجانية', '2024-12-31', 'ACTIVE'),
 ('تقييم مجاني', 300, 'جلسة تقييم مجانية', '2024-12-31', 'ACTIVE'),
 ('خصم 25%', 200, 'خصم على الجلسة القادمة', '2024-12-31', 'ACTIVE');
+
+-- 11. Assessments Setup
+INSERT INTO assessments (case_id, assessment_type, score, assessment_date, next_assessment_date, assessor_id, recommendations, status)
+VALUES
+(3, 'IQ', 95.50, '2024-02-15', '2024-08-15', 3, 'الاستمرار في خطة التدخل الحالية', 'COMPLETED'),
+(2, 'PSYCHOLOGICAL', 82.00, '2024-03-01', '2024-09-01', 3, 'البدء في جلسات العلاج باللعب', 'COMPLETED'),
+(1, 'LEARNING_DIFFICULTIES', 88.75, '2024-03-10', '2024-09-10', 4, 'تطبيق استراتيجيات التدخل في القراءة', 'COMPLETED');
