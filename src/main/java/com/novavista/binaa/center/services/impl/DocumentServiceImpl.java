@@ -7,12 +7,12 @@ import com.novavista.binaa.center.entity.User;
 import com.novavista.binaa.center.enums.DocumentType;
 import com.novavista.binaa.center.exceptions.ResourceNotFoundException;
 import com.novavista.binaa.center.exceptions.ValidationException;
+import com.novavista.binaa.center.mapper.DocumentMapper;
 import com.novavista.binaa.center.repository.CaseRepository;
 import com.novavista.binaa.center.repository.DocumentRepository;
 import com.novavista.binaa.center.repository.UserRepository;
 import com.novavista.binaa.center.services.DocumentService;
 import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -20,8 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.stream.Collectors;
-
 @Service
 @Slf4j
 @Transactional
@@ -29,17 +27,17 @@ public class DocumentServiceImpl implements DocumentService {
     private final DocumentRepository documentRepository;
     private final CaseRepository caseRepository;
     private final UserRepository userRepository;
-    private final ModelMapper modelMapper;
+    private final DocumentMapper documentMapper;
 
     @Autowired
     public DocumentServiceImpl(DocumentRepository documentRepository,
                                CaseRepository caseRepository,
                                UserRepository userRepository,
-                               ModelMapper modelMapper) {
+                               DocumentMapper documentMapper) {
         this.documentRepository = documentRepository;
         this.caseRepository = caseRepository;
         this.userRepository = userRepository;
-        this.modelMapper = modelMapper;
+        this.documentMapper = documentMapper;
     }
 
     @Override
@@ -52,21 +50,21 @@ public class DocumentServiceImpl implements DocumentService {
         User uploadedBy = userRepository.findById(documentDTO.getUploadedBy())
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
-        Document document = modelMapper.map(documentDTO, Document.class);
+        Document document = documentMapper.toEntity(documentDTO);
         document.setCaseInfo(caseEntity);
         document.setUploadedBy(uploadedBy);
         document.setUploadDate(LocalDate.now());
 
         Document savedDocument = documentRepository.save(document);
         log.info("Created document with ID: {}", savedDocument.getDocumentId());
-        return modelMapper.map(savedDocument, DocumentDTO.class);
+        return documentMapper.toDto(savedDocument);
     }
 
     @Override
     @Transactional(readOnly = true)
     public DocumentDTO getDocumentById(Long id) {
         return documentRepository.findById(id)
-                .map(document -> modelMapper.map(document, DocumentDTO.class))
+                .map(documentMapper::toDto)
                 .orElseThrow(() -> new ResourceNotFoundException("Document not found"));
     }
 
@@ -75,26 +73,20 @@ public class DocumentServiceImpl implements DocumentService {
     public List<DocumentDTO> getDocumentsByCase(Long caseId) {
         Case caseEntity = caseRepository.findById(caseId)
                 .orElseThrow(() -> new ResourceNotFoundException("Case not found"));
-        return documentRepository.findByCaseInfo(caseEntity).stream()
-                .map(document -> modelMapper.map(document, DocumentDTO.class))
-                .collect(Collectors.toList());
+        return documentMapper.toDtoList(documentRepository.findByCaseInfo(caseEntity));
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<DocumentDTO> getDocumentsByType(DocumentType type) {
-        return documentRepository.findByType(type).stream()
-                .map(document -> modelMapper.map(document, DocumentDTO.class))
-                .collect(Collectors.toList());
+        return documentMapper.toDtoList(documentRepository.findByType(type));
     }
+
     @Override
     @Transactional(readOnly = true)
     public List<DocumentDTO> getAllDocuments() {
-        return documentRepository.findAll().stream()
-                .map(document -> modelMapper.map(document, DocumentDTO.class))
-                .collect(Collectors.toList());
+        return documentMapper.toDtoList(documentRepository.findAll());
     }
-
 
     @Override
     public DocumentDTO updateDocument(Long id, DocumentDTO documentDTO) {
@@ -103,12 +95,16 @@ public class DocumentServiceImpl implements DocumentService {
                 .orElseThrow(() -> new ResourceNotFoundException("Document not found"));
 
         validateDocument(documentDTO);
-        modelMapper.map(documentDTO, existingDocument);
-        existingDocument.setDocumentId(id);
+        Document document = documentMapper.toEntity(documentDTO);
+        document.setDocumentId(id);
+        // Preserve relationships
+        document.setCaseInfo(existingDocument.getCaseInfo());
+        document.setUploadedBy(existingDocument.getUploadedBy());
+        document.setUploadDate(existingDocument.getUploadDate());
 
-        Document updatedDocument = documentRepository.save(existingDocument);
+        Document updatedDocument = documentRepository.save(document);
         log.info("Updated document ID: {}", id);
-        return modelMapper.map(updatedDocument, DocumentDTO.class);
+        return documentMapper.toDto(updatedDocument);
     }
 
     @Override
