@@ -7,12 +7,12 @@ import com.novavista.binaa.center.entity.Staff;
 import com.novavista.binaa.center.enums.AppointmentStatus;
 import com.novavista.binaa.center.exceptions.ResourceNotFoundException;
 import com.novavista.binaa.center.exceptions.ValidationException;
+import com.novavista.binaa.center.mapper.AppointmentMapper;
 import com.novavista.binaa.center.repository.AppointmentRepository;
 import com.novavista.binaa.center.repository.CaseRepository;
 import com.novavista.binaa.center.repository.StaffRepository;
 import com.novavista.binaa.center.services.AppointmentService;
 import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -20,7 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
+
 @Service
 @Slf4j
 @Transactional
@@ -28,26 +28,25 @@ public class AppointmentServiceImpl implements AppointmentService {
     private final AppointmentRepository appointmentRepository;
     private final CaseRepository caseRepository;
     private final StaffRepository staffRepository;
-    private final ModelMapper modelMapper;
+    private final AppointmentMapper appointmentMapper;
 
     @Autowired
     public AppointmentServiceImpl(AppointmentRepository appointmentRepository,
                                   CaseRepository caseRepository,
                                   StaffRepository staffRepository,
-                                  ModelMapper modelMapper) {
+                                  AppointmentMapper appointmentMapper) {
         this.appointmentRepository = appointmentRepository;
         this.caseRepository = caseRepository;
         this.staffRepository = staffRepository;
-        this.modelMapper = modelMapper;
+        this.appointmentMapper = appointmentMapper;
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<AppointmentDTO> getAllAppointments() {
         log.info("Fetching all appointments");
-        return appointmentRepository.findAll().stream()
-                .map(appointment -> modelMapper.map(appointment, AppointmentDTO.class))
-                .collect(Collectors.toList());
+        List<Appointment> appointments = appointmentRepository.findAll();
+        return appointmentMapper.toDtoList(appointments);
     }
 
     @Override
@@ -60,37 +59,35 @@ public class AppointmentServiceImpl implements AppointmentService {
         Staff staff = staffRepository.findById(appointmentDTO.getStaffId())
                 .orElseThrow(() -> new ResourceNotFoundException("Staff not found"));
 
-        Appointment appointment = modelMapper.map(appointmentDTO, Appointment.class);
+        Appointment appointment = appointmentMapper.toEntity(appointmentDTO);
         appointment.setCaseInfo(caseEntity);
         appointment.setStaff(staff);
 
         Appointment savedAppointment = appointmentRepository.save(appointment);
         log.info("Created appointment with ID: {}", savedAppointment.getAppointmentId());
-        return modelMapper.map(savedAppointment, AppointmentDTO.class);
+        return appointmentMapper.toDto(savedAppointment);
     }
 
     @Override
     @Transactional(readOnly = true)
     public AppointmentDTO getAppointmentById(Long id) {
-        return appointmentRepository.findById(id)
-                .map(appointment -> modelMapper.map(appointment, AppointmentDTO.class))
+        Appointment appointment = appointmentRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Appointment not found"));
+        return appointmentMapper.toDto(appointment);
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<AppointmentDTO> getAppointmentsByDateTime(LocalDateTime dateTime) {
-        return appointmentRepository.findByDateTime(dateTime).stream()
-                .map(appointment -> modelMapper.map(appointment, AppointmentDTO.class))
-                .collect(Collectors.toList());
+        List<Appointment> appointments = appointmentRepository.findByDateTime(dateTime);
+        return appointmentMapper.toDtoList(appointments);
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<AppointmentDTO> getAppointmentsByStatus(AppointmentStatus status) {
-        return appointmentRepository.findByStatus(status).stream()
-                .map(appointment -> modelMapper.map(appointment, AppointmentDTO.class))
-                .collect(Collectors.toList());
+        List<Appointment> appointments = appointmentRepository.findByStatus(status);
+        return appointmentMapper.toDtoList(appointments);
     }
 
     @Override
@@ -100,12 +97,12 @@ public class AppointmentServiceImpl implements AppointmentService {
                 .orElseThrow(() -> new ResourceNotFoundException("Appointment not found"));
 
         validateAppointment(appointmentDTO);
-        modelMapper.map(appointmentDTO, existingAppointment);
+        appointmentMapper.toEntity(appointmentDTO);
         existingAppointment.setAppointmentId(id);
 
         Appointment updatedAppointment = appointmentRepository.save(existingAppointment);
         log.info("Updated appointment ID: {}", id);
-        return modelMapper.map(updatedAppointment, AppointmentDTO.class);
+        return appointmentMapper.toDto(updatedAppointment);
     }
 
     @Override
