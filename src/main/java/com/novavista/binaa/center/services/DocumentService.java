@@ -10,6 +10,7 @@ public interface DocumentService {
     DocumentDTO getDocumentById(Long id);
     List<DocumentDTO> getDocumentsByCase(Long caseId);
     List<DocumentDTO> getDocumentsByType(DocumentType type);
+    List<DocumentDTO> getAllDocuments();
     DocumentDTO updateDocument(Long id, DocumentDTO documentDTO);
     void deleteDocument(Long id);
 }

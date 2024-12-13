@@ -52,6 +52,13 @@ public class DocumentController {
         return ResponseEntity.ok(documentService.getDocumentsByType(type));
     }
 
+    @GetMapping
+    @PreAuthorize("hasAnyRole('ADMIN', 'STAFF')")
+    public ResponseEntity<List<DocumentDTO>> getAllDocuments() {
+        log.info("Fetching all documents");
+        return ResponseEntity.ok(documentService.getAllDocuments());
+    }
+
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyRole('ADMIN', 'STAFF')")
     public ResponseEntity<DocumentDTO> updateDocument(@PathVariable Long id, @Valid @RequestBody DocumentDTO documentDTO) {

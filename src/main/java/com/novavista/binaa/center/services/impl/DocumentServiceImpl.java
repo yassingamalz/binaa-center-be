@@ -87,6 +87,14 @@ public class DocumentServiceImpl implements DocumentService {
                 .map(document -> modelMapper.map(document, DocumentDTO.class))
                 .collect(Collectors.toList());
     }
+    @Override
+    @Transactional(readOnly = true)
+    public List<DocumentDTO> getAllDocuments() {
+        return documentRepository.findAll().stream()
+                .map(document -> modelMapper.map(document, DocumentDTO.class))
+                .collect(Collectors.toList());
+    }
+
 
     @Override
     public DocumentDTO updateDocument(Long id, DocumentDTO documentDTO) {
