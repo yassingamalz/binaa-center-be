@@ -26,12 +26,12 @@ public class DocumentMapper implements EntityMapper<DocumentDTO, Document> {
             
         this.mapper = mapper;
     }
-    
+
     @Override
     public DocumentDTO toDto(Document entity) {
         return mapper.map(entity, DocumentDTO.class);
     }
-    
+
     @Override
     public Document toEntity(DocumentDTO dto) {
         return mapper.map(dto, Document.class);

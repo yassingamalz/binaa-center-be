@@ -129,13 +129,15 @@ INSERT INTO payments (
 INSERT INTO documents (
     case_id,
     type,
-    file_path,
+    file_name,
+    content_type,
+    file_size,
     upload_date,
     uploaded_by
 ) VALUES
-(1, 'ASSESSMENT', '/documents/cases/1/ASSESSMENT_2024_01.pdf', '2024-01-20', 1),
-(1, 'PROGRESS_REPORT', '/documents/cases/1/progress_2024_02.pdf', '2024-02-01', 1),
-(2, 'ASSESSMENT', '/documents/cases/2/ASSESSMENT_2024_02.pdf', '2024-02-05', 1);
+(1, 'ASSESSMENT', 'ASSESSMENT_2024_01.pdf', 'application/pdf', 123456, '2024-01-20', 1),
+(1, 'PROGRESS_REPORT', 'progress_2024_02.pdf', 'application/pdf', 789123, '2024-02-01', 1),
+(2, 'ASSESSMENT', 'ASSESSMENT_2024_02.pdf', 'application/pdf', 102400, '2024-02-05', 1);
 
 -- 9. Expenses Setup
 INSERT INTO expenses (

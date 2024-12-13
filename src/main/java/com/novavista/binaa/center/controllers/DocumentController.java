@@ -1,15 +1,21 @@
 package com.novavista.binaa.center.controllers;
 
 import com.novavista.binaa.center.dto.DocumentDTO;
+import com.novavista.binaa.center.entity.Document;
 import com.novavista.binaa.center.enums.DocumentType;
 import com.novavista.binaa.center.services.DocumentService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -57,6 +63,28 @@ public class DocumentController {
     public ResponseEntity<List<DocumentDTO>> getAllDocuments() {
         log.info("Fetching all documents");
         return ResponseEntity.ok(documentService.getAllDocuments());
+    }
+
+    @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PreAuthorize("hasAnyRole('ADMIN', 'STAFF')")
+    public ResponseEntity<DocumentDTO> uploadDocument(
+            @RequestParam("file") MultipartFile file,
+            @RequestParam("type") DocumentType type,
+            @RequestParam("caseId") Long caseId) {
+        log.info("Uploading document for case: {}", caseId);
+        return new ResponseEntity<>(documentService.uploadDocument(file, type, caseId),
+                HttpStatus.CREATED);
+    }
+
+    @GetMapping("/download/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'STAFF')")
+    public ResponseEntity<Resource> downloadDocument(@PathVariable Long id) {
+        Document document = documentService.getDocumentForDownload(id);
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(document.getContentType()))
+                .header(HttpHeaders.CONTENT_DISPOSITION,
+                        "attachment; filename=\"" + document.getFileName() + "\"")
+                .body(new ByteArrayResource(document.getFileData()));
     }
 
     @PutMapping("/{id}")

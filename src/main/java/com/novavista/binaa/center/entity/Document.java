@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
-
 @Entity
 @Table(name = "documents")
 @Data
@@ -26,7 +25,14 @@ public class Document {
     @Enumerated(EnumType.STRING)
     private DocumentType type;
 
-    private String filePath;
+    private String fileName;
+    private String contentType;
+
+    @Lob
+    @Column(length = 16777215) // MEDIUMBLOB - for files up to 16MB
+    private byte[] fileData;
+
+    private Long fileSize;
     private LocalDate uploadDate;
 
     @ManyToOne

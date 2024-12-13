@@ -14,7 +14,10 @@ public class DocumentDTO {
     private Long documentId;
     private Long caseId;
     private DocumentType type;
-    private String filePath;
+    private String fileName;
+    private String contentType;
+    private byte[] fileData;
+    private Long fileSize;
     private LocalDate uploadDate;
     private Long uploadedBy;
 }

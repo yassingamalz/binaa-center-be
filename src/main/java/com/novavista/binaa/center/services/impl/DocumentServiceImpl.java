@@ -11,15 +11,19 @@ import com.novavista.binaa.center.mapper.DocumentMapper;
 import com.novavista.binaa.center.repository.CaseRepository;
 import com.novavista.binaa.center.repository.DocumentRepository;
 import com.novavista.binaa.center.repository.UserRepository;
+import com.novavista.binaa.center.security.SecurityUtils;
 import com.novavista.binaa.center.services.DocumentService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
+
 @Service
 @Slf4j
 @Transactional
@@ -28,16 +32,19 @@ public class DocumentServiceImpl implements DocumentService {
     private final CaseRepository caseRepository;
     private final UserRepository userRepository;
     private final DocumentMapper documentMapper;
+    private final SecurityUtils securityUtils;
 
     @Autowired
     public DocumentServiceImpl(DocumentRepository documentRepository,
                                CaseRepository caseRepository,
                                UserRepository userRepository,
-                               DocumentMapper documentMapper) {
+                               DocumentMapper documentMapper,
+                               SecurityUtils securityUtils) {
         this.documentRepository = documentRepository;
         this.caseRepository = caseRepository;
         this.userRepository = userRepository;
         this.documentMapper = documentMapper;
+        this.securityUtils = securityUtils;
     }
 
     @Override
@@ -87,6 +94,53 @@ public class DocumentServiceImpl implements DocumentService {
     public List<DocumentDTO> getAllDocuments() {
         return documentMapper.toDtoList(documentRepository.findAll());
     }
+    @Override
+    public DocumentDTO uploadDocument(MultipartFile file, DocumentType type, Long caseId) {
+        log.info("Processing document upload for case ID: {}", caseId);
+
+        try {
+            // Validate file
+            if (file.isEmpty()) {
+                throw new ValidationException("File is empty");
+            }
+            if (file.getSize() > 16_000_000) { // 16MB limit
+                throw new ValidationException("File size exceeds maximum limit of 16MB");
+            }
+
+            // Get current user
+            User currentUser = securityUtils.getCurrentUser();
+
+            // Create document
+            Document document = new Document();
+            document.setType(type);
+            document.setCaseInfo(caseRepository.findById(caseId)
+                    .orElseThrow(() -> new ResourceNotFoundException("Case not found")));
+            document.setFileName(file.getOriginalFilename());
+            document.setContentType(file.getContentType());
+            document.setFileData(file.getBytes());
+            document.setFileSize(file.getSize());
+            document.setUploadDate(LocalDate.now());
+            document.setUploadedBy(currentUser);
+
+            Document savedDocument = documentRepository.save(document);
+            log.info("Document uploaded successfully with ID: {}", savedDocument.getDocumentId());
+
+            // Convert to DTO without file data for response
+            DocumentDTO dto = documentMapper.toDto(savedDocument);
+            dto.setFileData(null); // Don't send file data in response
+            return dto;
+
+        } catch (IOException e) {
+            log.error("Failed to process file upload", e);
+            throw new RuntimeException("Failed to process file upload", e);
+        }
+    }
+    @Override
+    @Transactional(readOnly = true)
+    public Document getDocumentForDownload(Long id) {
+        return documentRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Document not found"));
+    }
 
     @Override
     public DocumentDTO updateDocument(Long id, DocumentDTO documentDTO) {
@@ -120,11 +174,19 @@ public class DocumentServiceImpl implements DocumentService {
     }
 
     private void validateDocument(DocumentDTO documentDTO) {
+        // Validate Document Type
         if (documentDTO.getType() == null) {
             throw new ValidationException("Document type is required");
         }
-        if (documentDTO.getFilePath() == null || documentDTO.getFilePath().trim().isEmpty()) {
-            throw new ValidationException("File path is required");
+
+        // Validate File Size (assuming you want to include size validation based on your previous code)
+        if (documentDTO.getFileSize() == null || documentDTO.getFileSize() <= 0) {
+            throw new ValidationException("Valid file size is required");
+        }
+
+        // Validate Case ID (if needed in your use case)
+        if (documentDTO.getCaseId() == null) {
+            throw new ValidationException("Case ID is required");
         }
     }
 }
