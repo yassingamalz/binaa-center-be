@@ -42,6 +42,15 @@ public class AppointmentServiceImpl implements AppointmentService {
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public List<AppointmentDTO> getAllAppointments() {
+        log.info("Fetching all appointments");
+        return appointmentRepository.findAll().stream()
+                .map(appointment -> modelMapper.map(appointment, AppointmentDTO.class))
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public AppointmentDTO createAppointment(AppointmentDTO appointmentDTO) {
         log.info("Creating new appointment for case ID: {}", appointmentDTO.getCaseId());
         validateAppointment(appointmentDTO);

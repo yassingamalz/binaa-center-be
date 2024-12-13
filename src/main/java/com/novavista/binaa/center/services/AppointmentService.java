@@ -8,6 +8,7 @@ import java.util.List;
 
 public interface AppointmentService {
     AppointmentDTO createAppointment(AppointmentDTO appointmentDTO);
+    List<AppointmentDTO> getAllAppointments();
     AppointmentDTO getAppointmentById(Long id);
     List<AppointmentDTO> getAppointmentsByDateTime(LocalDateTime dateTime);
     List<AppointmentDTO> getAppointmentsByStatus(AppointmentStatus status);

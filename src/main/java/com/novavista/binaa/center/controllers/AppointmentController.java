@@ -32,6 +32,12 @@ public class AppointmentController {
         log.info("Creating new appointment");
         return new ResponseEntity<>(appointmentService.createAppointment(appointmentDTO), HttpStatus.CREATED);
     }
+    @GetMapping
+    @PreAuthorize("hasAnyRole('ADMIN', 'STAFF')")
+    public ResponseEntity<List<AppointmentDTO>> getAllAppointments() {
+        log.info("Fetching all appointments");
+        return ResponseEntity.ok(appointmentService.getAllAppointments());
+    }
 
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyRole('ADMIN', 'STAFF')")
