@@ -1,5 +1,6 @@
 package com.novavista.binaa.center.controllers;
 
+import com.novavista.binaa.center.dto.lookup.CaseLookupDTO;
 import com.novavista.binaa.center.dto.request.CaseDTO;
 import com.novavista.binaa.center.services.CaseService;
 import jakarta.validation.Valid;
@@ -78,5 +79,10 @@ public class CaseController {
         log.info("Deleting case with id: {}", id);
         caseService.deleteCase(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/lookup/cases")
+    public List<CaseLookupDTO> getActiveCases() {
+        return caseService.getActiveCasesForLookup();
     }
 }

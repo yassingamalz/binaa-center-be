@@ -1,5 +1,6 @@
 package com.novavista.binaa.center.controllers;
 
+import com.novavista.binaa.center.dto.lookup.StaffLookupDTO;
 import com.novavista.binaa.center.dto.request.StaffDTO;
 import com.novavista.binaa.center.services.StaffService;
 import jakarta.validation.Valid;
@@ -65,5 +66,10 @@ public class StaffController {
         log.info("Deleting staff member with id: {}", id);
         staffService.deleteStaff(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/lookup/staff")
+    public List<StaffLookupDTO> getAvailableStaff() {
+        return staffService.getAvailableStaffForLookup();
     }
 }

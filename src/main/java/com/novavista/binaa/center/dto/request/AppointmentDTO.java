@@ -18,4 +18,5 @@ public class AppointmentDTO {
     private LocalDateTime dateTime;
     private AppointmentStatus status;
     private AppointmentType type;
+    private String notes;
 }

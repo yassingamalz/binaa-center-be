@@ -1,6 +1,7 @@
 package com.novavista.binaa.center.controllers;
 
 import com.novavista.binaa.center.dto.request.AppointmentDTO;
+import com.novavista.binaa.center.dto.response.AppointmentResponseDTO;
 import com.novavista.binaa.center.enums.AppointmentStatus;
 import com.novavista.binaa.center.services.AppointmentService;
 import jakarta.validation.Valid;
@@ -32,9 +33,10 @@ public class AppointmentController {
         log.info("Creating new appointment");
         return new ResponseEntity<>(appointmentService.createAppointment(appointmentDTO), HttpStatus.CREATED);
     }
+
     @GetMapping
     @PreAuthorize("hasAnyRole('ADMIN', 'STAFF')")
-    public ResponseEntity<List<AppointmentDTO>> getAllAppointments() {
+    public ResponseEntity<List<AppointmentResponseDTO>> getAllAppointments() {
         log.info("Fetching all appointments");
         return ResponseEntity.ok(appointmentService.getAllAppointments());
     }
@@ -48,7 +50,7 @@ public class AppointmentController {
 
     @GetMapping("/datetime/{dateTime}")
     @PreAuthorize("hasAnyRole('ADMIN', 'STAFF')")
-    public ResponseEntity<List<AppointmentDTO>> getAppointmentsByDateTime(
+    public ResponseEntity<List<AppointmentResponseDTO>> getAppointmentsByDateTime(
             @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dateTime) {
         log.info("Fetching appointments for datetime: {}", dateTime);
         return ResponseEntity.ok(appointmentService.getAppointmentsByDateTime(dateTime));
@@ -56,7 +58,7 @@ public class AppointmentController {
 
     @GetMapping("/status/{status}")
     @PreAuthorize("hasAnyRole('ADMIN', 'STAFF')")
-    public ResponseEntity<List<AppointmentDTO>> getAppointmentsByStatus(@PathVariable AppointmentStatus status) {
+    public ResponseEntity<List<AppointmentResponseDTO>> getAppointmentsByStatus(@PathVariable AppointmentStatus status) {
         log.info("Fetching appointments with status: {}", status);
         return ResponseEntity.ok(appointmentService.getAppointmentsByStatus(status));
     }

@@ -1,5 +1,6 @@
 package com.novavista.binaa.center.services.impl;
 
+import com.novavista.binaa.center.dto.lookup.StaffLookupDTO;
 import com.novavista.binaa.center.dto.request.StaffDTO;
 import com.novavista.binaa.center.entity.Staff;
 import com.novavista.binaa.center.exceptions.ResourceNotFoundException;
@@ -85,6 +86,12 @@ public class StaffServiceImpl implements StaffService {
             log.error("Cannot delete staff: {}", e.getMessage());
             throw new RuntimeException("Cannot delete staff member due to existing references");
         }
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<StaffLookupDTO> getAvailableStaffForLookup() {
+        return staffRepository.findAvailableStaffForLookup();
     }
 
     private void validateNewStaff(StaffDTO staffDTO) {

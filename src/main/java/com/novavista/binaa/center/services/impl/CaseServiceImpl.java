@@ -1,5 +1,6 @@
 package com.novavista.binaa.center.services.impl;
 
+import com.novavista.binaa.center.dto.lookup.CaseLookupDTO;
 import com.novavista.binaa.center.dto.request.CaseDTO;
 import com.novavista.binaa.center.entity.Case;
 import com.novavista.binaa.center.enums.CaseStatus;
@@ -85,7 +86,7 @@ public class CaseServiceImpl implements CaseService {
     @Transactional(readOnly = true)
     public List<CaseDTO> getAllActiveCases() {
         return caseRepository.findByStatus(CaseStatus.ACTIVE).stream()
-                .map(caseEntity -> caseMapper.toDto(caseEntity))
+                .map(caseMapper::toDto)
                 .collect(Collectors.toList());
     }
 
@@ -155,6 +156,11 @@ public class CaseServiceImpl implements CaseService {
         }
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public List<CaseLookupDTO> getActiveCasesForLookup() {
+        return caseRepository.findActiveCasesForLookup();
+    }
     private void validateNewCase(CaseDTO caseDTO) {
         if (caseDTO.getName() == null || caseDTO.getName().trim().isEmpty()) {
             throw new ValidationException("Case name cannot be empty");

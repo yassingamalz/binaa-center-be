@@ -1,6 +1,7 @@
 package com.novavista.binaa.center.mapper;
 
 import com.novavista.binaa.center.dto.request.AppointmentDTO;
+import com.novavista.binaa.center.dto.response.AppointmentResponseDTO;
 import com.novavista.binaa.center.entity.Appointment;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,16 @@ public class AppointmentMapper implements EntityMapper<AppointmentDTO, Appointme
     @Autowired
     public AppointmentMapper(ModelMapper mapper) {
         this.mapper = mapper;
+
+        mapper.createTypeMap(Appointment.class, AppointmentResponseDTO.class)
+                .addMappings(mapping -> {
+                    mapping.map(src -> src.getCaseInfo().getName(), AppointmentResponseDTO::setCaseName);
+                    mapping.map(src -> src.getStaff().getName(), AppointmentResponseDTO::setStaffName);
+                });
+    }
+
+    public AppointmentResponseDTO toResponseDto(Appointment entity) {
+        return mapper.map(entity, AppointmentResponseDTO.class);
     }
 
     @Override
