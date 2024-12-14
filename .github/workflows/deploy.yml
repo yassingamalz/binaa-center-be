@@ -56,6 +56,7 @@ jobs:
           username: ${{ secrets.ORACLE_USERNAME }}
           key: ${{ secrets.ORACLE_SSH_KEY }}
           script: |
+            docker network inspect binaa-network || docker network create binaa-network
             docker pull yassingamalz/binaa-center-backend:latest
             docker stop binaa-center-backend || true
             docker rm binaa-center-backend || true
