@@ -1,6 +1,6 @@
 package com.novavista.binaa.center.mapper;
 
-import com.novavista.binaa.center.dto.CaseDTO;
+import com.novavista.binaa.center.dto.request.CaseDTO;
 import com.novavista.binaa.center.entity.Case;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;

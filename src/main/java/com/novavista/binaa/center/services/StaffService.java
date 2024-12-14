@@ -1,6 +1,6 @@
 package com.novavista.binaa.center.services;
 
-import com.novavista.binaa.center.dto.StaffDTO;
+import com.novavista.binaa.center.dto.request.StaffDTO;
 
 import java.util.List;
 

@@ -1,6 +1,6 @@
 package com.novavista.binaa.center.services;
 
-import com.novavista.binaa.center.dto.DocumentDTO;
+import com.novavista.binaa.center.dto.request.DocumentDTO;
 import com.novavista.binaa.center.entity.Document;
 import com.novavista.binaa.center.enums.DocumentType;
 import org.springframework.web.multipart.MultipartFile;

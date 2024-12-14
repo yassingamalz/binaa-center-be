@@ -1,6 +1,6 @@
 package com.novavista.binaa.center.services.impl;
 
-import com.novavista.binaa.center.dto.StaffDTO;
+import com.novavista.binaa.center.dto.request.StaffDTO;
 import com.novavista.binaa.center.entity.Staff;
 import com.novavista.binaa.center.exceptions.ResourceNotFoundException;
 import com.novavista.binaa.center.exceptions.ValidationException;

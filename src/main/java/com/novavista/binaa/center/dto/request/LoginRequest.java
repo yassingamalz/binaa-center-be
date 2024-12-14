@@ -1,4 +1,4 @@
-package com.novavista.binaa.center.dto;
+package com.novavista.binaa.center.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;

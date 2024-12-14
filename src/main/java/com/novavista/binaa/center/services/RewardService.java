@@ -1,6 +1,6 @@
 package com.novavista.binaa.center.services;
 
-import com.novavista.binaa.center.dto.RewardDTO;
+import com.novavista.binaa.center.dto.request.RewardDTO;
 import com.novavista.binaa.center.enums.RewardStatus;
 
 import java.util.List;

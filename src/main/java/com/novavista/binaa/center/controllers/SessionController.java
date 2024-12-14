@@ -1,6 +1,6 @@
 package com.novavista.binaa.center.controllers;
 
-import com.novavista.binaa.center.dto.SessionDTO;
+import com.novavista.binaa.center.dto.request.SessionDTO;
 import com.novavista.binaa.center.services.SessionService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;

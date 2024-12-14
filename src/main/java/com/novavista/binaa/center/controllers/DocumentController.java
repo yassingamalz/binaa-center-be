@@ -1,6 +1,6 @@
 package com.novavista.binaa.center.controllers;
 
-import com.novavista.binaa.center.dto.DocumentDTO;
+import com.novavista.binaa.center.dto.request.DocumentDTO;
 import com.novavista.binaa.center.entity.Document;
 import com.novavista.binaa.center.enums.DocumentType;
 import com.novavista.binaa.center.services.DocumentService;

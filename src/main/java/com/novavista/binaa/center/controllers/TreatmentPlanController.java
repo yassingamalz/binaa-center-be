@@ -1,6 +1,6 @@
 package com.novavista.binaa.center.controllers;
 
-import com.novavista.binaa.center.dto.TreatmentPlanDTO;
+import com.novavista.binaa.center.dto.request.TreatmentPlanDTO;
 import com.novavista.binaa.center.enums.TreatmentPlanStatus;
 import com.novavista.binaa.center.services.TreatmentPlanService;
 import jakarta.validation.Valid;

@@ -1,4 +1,4 @@
-package com.novavista.binaa.center.dto;
+package com.novavista.binaa.center.dto.lookup;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,9 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class StaffDTO {
-    private Long staffId;
+public class CaseLookupDTO {
+    private Long id;
     private String name;
-    private String role;
-    private String contactNumber;
 }

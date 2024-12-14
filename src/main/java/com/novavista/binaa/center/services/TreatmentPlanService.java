@@ -1,6 +1,6 @@
 package com.novavista.binaa.center.services;
 
-import com.novavista.binaa.center.dto.TreatmentPlanDTO;
+import com.novavista.binaa.center.dto.request.TreatmentPlanDTO;
 import com.novavista.binaa.center.enums.TreatmentPlanStatus;
 
 import java.util.List;

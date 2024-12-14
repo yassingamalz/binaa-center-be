@@ -1,4 +1,4 @@
-package com.novavista.binaa.center.dto;
+package com.novavista.binaa.center.dto.request;
 
 import com.novavista.binaa.center.enums.ExpenseCategory;
 import com.novavista.binaa.center.enums.PaymentMethod;

@@ -1,17 +1,14 @@
 package com.novavista.binaa.center.services.impl;
 
-import com.novavista.binaa.center.dto.CaseDTO;
-import com.novavista.binaa.center.dto.ReportDTO;
+import com.novavista.binaa.center.dto.request.ReportDTO;
 import com.novavista.binaa.center.entity.Case;
 import com.novavista.binaa.center.entity.Report;
 import com.novavista.binaa.center.entity.Session;
-import com.novavista.binaa.center.enums.CaseStatus;
 import com.novavista.binaa.center.exceptions.ResourceNotFoundException;
 import com.novavista.binaa.center.exceptions.ValidationException;
 import com.novavista.binaa.center.repository.CaseRepository;
 import com.novavista.binaa.center.repository.ReportRepository;
 import com.novavista.binaa.center.repository.SessionRepository;
-import com.novavista.binaa.center.services.CaseService;
 import com.novavista.binaa.center.services.ReportService;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;

@@ -1,6 +1,6 @@
 package com.novavista.binaa.center.services;
 
-import com.novavista.binaa.center.dto.FidelityPointsDTO;
+import com.novavista.binaa.center.dto.request.FidelityPointsDTO;
 import com.novavista.binaa.center.enums.PointsStatus;
 
 import java.util.List;

@@ -1,6 +1,6 @@
 package com.novavista.binaa.center.controllers;
 
-import com.novavista.binaa.center.dto.PaymentDTO;
+import com.novavista.binaa.center.dto.request.PaymentDTO;
 import com.novavista.binaa.center.enums.PaymentStatus;
 import com.novavista.binaa.center.services.PaymentService;
 import jakarta.validation.Valid;
@@ -13,7 +13,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 

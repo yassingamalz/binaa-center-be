@@ -1,6 +1,6 @@
 package com.novavista.binaa.center.services.impl;
 
-import com.novavista.binaa.center.dto.UserDTO;
+import com.novavista.binaa.center.dto.request.UserDTO;
 import com.novavista.binaa.center.entity.User;
 import com.novavista.binaa.center.exceptions.InvalidPasswordException;
 import com.novavista.binaa.center.exceptions.ResourceNotFoundException;

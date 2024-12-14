@@ -1,6 +1,6 @@
 package com.novavista.binaa.center.mapper;
 
-import com.novavista.binaa.center.dto.DocumentDTO;
+import com.novavista.binaa.center.dto.request.DocumentDTO;
 import com.novavista.binaa.center.entity.Case;
 import com.novavista.binaa.center.entity.Document;
 import com.novavista.binaa.center.entity.User;

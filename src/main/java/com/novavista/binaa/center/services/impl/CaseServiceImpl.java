@@ -1,6 +1,6 @@
 package com.novavista.binaa.center.services.impl;
 
-import com.novavista.binaa.center.dto.CaseDTO;
+import com.novavista.binaa.center.dto.request.CaseDTO;
 import com.novavista.binaa.center.entity.Case;
 import com.novavista.binaa.center.enums.CaseStatus;
 import com.novavista.binaa.center.exceptions.ResourceNotFoundException;
@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 

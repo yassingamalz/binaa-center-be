@@ -1,6 +1,6 @@
 package com.novavista.binaa.center.services.impl;
 
-import com.novavista.binaa.center.dto.AppointmentDTO;
+import com.novavista.binaa.center.dto.request.AppointmentDTO;
 import com.novavista.binaa.center.entity.Appointment;
 import com.novavista.binaa.center.entity.Case;
 import com.novavista.binaa.center.entity.Staff;

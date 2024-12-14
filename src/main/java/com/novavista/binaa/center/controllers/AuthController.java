@@ -1,8 +1,8 @@
 package com.novavista.binaa.center.controllers;
 
-import com.novavista.binaa.center.dto.LoginRequest;
-import com.novavista.binaa.center.dto.LoginResponse;
-import com.novavista.binaa.center.dto.UserDTO;
+import com.novavista.binaa.center.dto.request.LoginRequest;
+import com.novavista.binaa.center.dto.response.LoginResponse;
+import com.novavista.binaa.center.dto.request.UserDTO;
 import com.novavista.binaa.center.entity.User;
 import com.novavista.binaa.center.enums.UserRole;
 import com.novavista.binaa.center.security.CustomUserDetails;
@@ -17,7 +17,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;

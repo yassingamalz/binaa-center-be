@@ -1,6 +1,6 @@
 package com.novavista.binaa.center.services;
 
-import com.novavista.binaa.center.dto.ExpenseDTO;
+import com.novavista.binaa.center.dto.request.ExpenseDTO;
 import com.novavista.binaa.center.enums.ExpenseCategory;
 
 import java.time.LocalDate;

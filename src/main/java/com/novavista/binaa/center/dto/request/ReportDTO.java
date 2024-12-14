@@ -1,4 +1,4 @@
-package com.novavista.binaa.center.dto;
+package com.novavista.binaa.center.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

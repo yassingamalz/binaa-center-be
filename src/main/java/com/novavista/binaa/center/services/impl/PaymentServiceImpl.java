@@ -1,6 +1,6 @@
 package com.novavista.binaa.center.services.impl;
 
-import com.novavista.binaa.center.dto.PaymentDTO;
+import com.novavista.binaa.center.dto.request.PaymentDTO;
 import com.novavista.binaa.center.entity.Case;
 import com.novavista.binaa.center.entity.Payment;
 import com.novavista.binaa.center.entity.Session;

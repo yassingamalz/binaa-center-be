@@ -1,6 +1,6 @@
 package com.novavista.binaa.center.services;
 
-import com.novavista.binaa.center.dto.ReportDTO;
+import com.novavista.binaa.center.dto.request.ReportDTO;
 
 import java.util.List;
 

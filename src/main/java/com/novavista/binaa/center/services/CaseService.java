@@ -1,6 +1,6 @@
 package com.novavista.binaa.center.services;
 
-import com.novavista.binaa.center.dto.CaseDTO;
+import com.novavista.binaa.center.dto.request.CaseDTO;
 
 import java.util.List;
 public interface CaseService {

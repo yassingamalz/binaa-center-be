@@ -1,7 +1,6 @@
 package com.novavista.binaa.center.services;
 
-import com.novavista.binaa.center.dto.SessionDTO;
-import com.novavista.binaa.center.dto.UserDTO;
+import com.novavista.binaa.center.dto.request.SessionDTO;
 
 import java.time.LocalDateTime;
 import java.util.List;

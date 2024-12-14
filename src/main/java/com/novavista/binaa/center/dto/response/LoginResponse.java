@@ -1,5 +1,6 @@
-package com.novavista.binaa.center.dto;
+package com.novavista.binaa.center.dto.response;
 
+import com.novavista.binaa.center.dto.request.UserDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 

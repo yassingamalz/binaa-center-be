@@ -1,6 +1,6 @@
 package com.novavista.binaa.center.services;
 
-import com.novavista.binaa.center.dto.UserDTO;
+import com.novavista.binaa.center.dto.request.UserDTO;
 
 import java.util.List;
 

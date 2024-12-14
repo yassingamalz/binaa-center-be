@@ -1,6 +1,6 @@
 package com.novavista.binaa.center.services;
 
-import com.novavista.binaa.center.dto.PaymentDTO;
+import com.novavista.binaa.center.dto.request.PaymentDTO;
 import com.novavista.binaa.center.enums.PaymentStatus;
 
 import java.time.LocalDate;

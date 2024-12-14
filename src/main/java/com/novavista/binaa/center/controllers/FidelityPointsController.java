@@ -1,6 +1,6 @@
 package com.novavista.binaa.center.controllers;
 
-import com.novavista.binaa.center.dto.FidelityPointsDTO;
+import com.novavista.binaa.center.dto.request.FidelityPointsDTO;
 import com.novavista.binaa.center.enums.PointsStatus;
 import com.novavista.binaa.center.services.FidelityPointsService;
 import jakarta.validation.Valid;

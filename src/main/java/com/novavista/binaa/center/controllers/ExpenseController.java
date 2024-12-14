@@ -1,6 +1,6 @@
 package com.novavista.binaa.center.controllers;
 
-import com.novavista.binaa.center.dto.ExpenseDTO;
+import com.novavista.binaa.center.dto.request.ExpenseDTO;
 import com.novavista.binaa.center.enums.ExpenseCategory;
 import com.novavista.binaa.center.services.ExpenseService;
 import jakarta.validation.Valid;

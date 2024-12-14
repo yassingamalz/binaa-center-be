@@ -1,6 +1,6 @@
 package com.novavista.binaa.center.services;
 
-import com.novavista.binaa.center.dto.AssessmentDTO;
+import com.novavista.binaa.center.dto.request.AssessmentDTO;
 import com.novavista.binaa.center.enums.AssessmentStatus;
 
 import java.util.List;

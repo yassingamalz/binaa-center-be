@@ -1,6 +1,6 @@
 package com.novavista.binaa.center.controllers;
 
-import com.novavista.binaa.center.dto.StaffDTO;
+import com.novavista.binaa.center.dto.request.StaffDTO;
 import com.novavista.binaa.center.services.StaffService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
