@@ -1,6 +1,7 @@
 package com.novavista.binaa.center.controllers;
 
 import com.novavista.binaa.center.dto.request.SessionDTO;
+import com.novavista.binaa.center.dto.response.SessionResponseDTO;
 import com.novavista.binaa.center.services.SessionService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
@@ -40,20 +41,20 @@ public class SessionController {
 
     @GetMapping("/case/{caseId}")
     @PreAuthorize("hasAnyRole('ADMIN', 'STAFF')")
-    public ResponseEntity<List<SessionDTO>> getSessionsByCase(@PathVariable Long caseId) {
+    public ResponseEntity<List<SessionResponseDTO>> getSessionsByCase(@PathVariable Long caseId) {
         log.info("Fetching sessions for case: {}", caseId);
         return ResponseEntity.ok(sessionService.getSessionsByCase(caseId));
     }
 
     @GetMapping
     @PreAuthorize("hasAnyRole('ADMIN', 'STAFF')")
-    public ResponseEntity<List<SessionDTO>> getAllSessions() {
+    public ResponseEntity<List<SessionResponseDTO>> getAllSessions() {
         log.info("Fetching all sessions");
         return ResponseEntity.ok(sessionService.getAllSessions());
     }
     @GetMapping("/dateRange")
     @PreAuthorize("hasAnyRole('ADMIN', 'STAFF')")
-    public ResponseEntity<List<SessionDTO>> getSessionsByDateRange(
+    public ResponseEntity<List<SessionResponseDTO>> getSessionsByDateRange(
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end) {
         log.info("Fetching sessions between {} and {}", start, end);
