@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
+
 @RestController
 @RequestMapping("/api/sessions")
 @Slf4j
@@ -74,5 +76,14 @@ public class SessionController {
         log.info("Deleting session with id: {}", id);
         sessionService.deleteSession(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/stats")
+    @PreAuthorize("hasAnyRole('ADMIN', 'STAFF')")
+    public ResponseEntity<Map<String, Object>> getSessionStats(
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end) {
+        log.info("Fetching session statistics between {} and {}", start, end);
+        return ResponseEntity.ok(sessionService.getSessionStats(start, end));
     }
 }

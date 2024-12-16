@@ -6,6 +6,7 @@ import com.novavista.binaa.center.enums.AttendanceStatus;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 public interface SessionService {
     /**
@@ -70,4 +71,12 @@ public interface SessionService {
      * @return list of sessions with full details
      */
     List<SessionResponseDTO> getSessionsByStaff(Long staffId);
+
+    /**
+     * Retrieves session statistics for a given date range
+     * @param start start date/time
+     * @param end end date/time
+     * @return map of session statistics
+     */
+    Map<String, Object> getSessionStats(LocalDateTime start, LocalDateTime end);
 }

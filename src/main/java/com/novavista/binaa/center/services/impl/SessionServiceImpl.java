@@ -20,7 +20,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 @Service
 @Slf4j
 @Transactional
@@ -209,6 +212,33 @@ public class SessionServiceImpl implements SessionService {
             log.error("Failed to delete session: {}", e.getMessage());
             throw new ValidationException("Cannot delete session due to existing references");
         }
+    }
+
+    public Map<String, Object> getSessionStats(LocalDateTime start, LocalDateTime end) {
+        List<SessionResponseDTO> sessions = getSessionsByDateRange(start, end);
+
+        Map<String, Object> stats = new HashMap<>();
+        stats.put("totalSessions", sessions.size());
+        stats.put("attendanceRate", calculateAttendanceRate(sessions));
+        stats.put("cancelledSessions", countCancelledSessions(sessions));
+
+        return stats;
+    }
+
+    private double calculateAttendanceRate(List<SessionResponseDTO> sessions) {
+        if (sessions.isEmpty()) return 0.0;
+
+        long presentSessions = sessions.stream()
+                .filter(session -> session.getAttendanceStatus() == AttendanceStatus.PRESENT)
+                .count();
+
+        return (double) presentSessions / sessions.size() * 100.0;
+    }
+
+    private long countCancelledSessions(List<SessionResponseDTO> sessions) {
+        return sessions.stream()
+                .filter(session -> session.getAttendanceStatus() == AttendanceStatus.ABSENT)
+                .count();
     }
 
     private void validateSession(SessionDTO sessionDTO) {
