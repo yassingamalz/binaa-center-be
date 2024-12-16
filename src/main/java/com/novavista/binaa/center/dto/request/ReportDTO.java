@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -16,7 +15,7 @@ public class ReportDTO {
     private Long sessionId;
     private String reportContent;
     private LocalDate createdDate;
+    private String reportType;
+    private Long createdBy;
+    private String templateId;
 }
-
-
-

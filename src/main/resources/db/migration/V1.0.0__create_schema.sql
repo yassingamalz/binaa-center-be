@@ -75,12 +75,16 @@ CREATE TABLE IF NOT EXISTS payments (
 -- Reports table
 CREATE TABLE IF NOT EXISTS reports (
     report_id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    case_id INT UNSIGNED,
+    case_id INT UNSIGNED NOT NULL,
     session_id INT UNSIGNED,
-    report_content TEXT,
-    created_date DATE,
+    report_content TEXT NOT NULL,
+    created_date DATE NOT NULL,
+    report_type VARCHAR(20) NOT NULL,
+    created_by INT UNSIGNED,
+    template_id VARCHAR(50),
     FOREIGN KEY (case_id) REFERENCES cases(case_id),
-    FOREIGN KEY (session_id) REFERENCES sessions(session_id)
+    FOREIGN KEY (session_id) REFERENCES sessions(session_id),
+    FOREIGN KEY (created_by) REFERENCES users(user_id)
 );
 
 -- Assessments table
