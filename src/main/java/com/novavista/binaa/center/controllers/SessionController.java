@@ -86,4 +86,12 @@ public class SessionController {
         log.info("Fetching session statistics between {} and {}", start, end);
         return ResponseEntity.ok(sessionService.getSessionStats(start, end));
     }
+    @GetMapping("/upcoming")
+    @PreAuthorize("hasAnyRole('ADMIN', 'STAFF')")
+    public ResponseEntity<List<SessionResponseDTO>> getUpcomingSessions() {
+        log.info("Fetching upcoming sessions");
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime nextWeek = now.plusDays(7);
+        return ResponseEntity.ok(sessionService.getUpcomingSessions());
+    }
 }

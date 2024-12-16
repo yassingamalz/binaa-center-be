@@ -79,4 +79,14 @@ public interface SessionService {
      * @return map of session statistics
      */
     Map<String, Object> getSessionStats(LocalDateTime start, LocalDateTime end);
+
+    /**
+     * Retrieves upcoming sessions within the next 7 days
+     * @return list of upcoming sessions
+     */
+    default List<SessionResponseDTO> getUpcomingSessions() {
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime nextWeek = now.plusDays(7);
+        return getSessionsByDateRange(now, nextWeek);
+    }
 }
