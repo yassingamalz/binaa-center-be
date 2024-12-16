@@ -1,6 +1,7 @@
 package com.novavista.binaa.center.controllers;
 
 import com.novavista.binaa.center.dto.request.ExpenseDTO;
+import com.novavista.binaa.center.dto.response.ExpenseResponseDTO;
 import com.novavista.binaa.center.enums.ExpenseCategory;
 import com.novavista.binaa.center.services.ExpenseService;
 import jakarta.validation.Valid;
@@ -32,6 +33,14 @@ public class ExpenseController {
         return new ResponseEntity<>(expenseService.createExpense(expenseDTO), HttpStatus.CREATED);
     }
 
+
+    @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<ExpenseResponseDTO>> getAllExpenses() {
+        List<ExpenseResponseDTO> expenses = expenseService.getAllExpenses();
+        return ResponseEntity.ok(expenses);
+    }
+
     @GetMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ExpenseDTO> getExpenseById(@PathVariable Long id) {
@@ -41,14 +50,14 @@ public class ExpenseController {
 
     @GetMapping("/category/{category}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<List<ExpenseDTO>> getExpensesByCategory(@PathVariable ExpenseCategory category) {
+    public ResponseEntity<List<ExpenseResponseDTO>> getExpensesByCategory(@PathVariable ExpenseCategory category) {
         log.info("Fetching expenses for category: {}", category);
         return ResponseEntity.ok(expenseService.getExpensesByCategory(category));
     }
 
     @GetMapping("/by-date-range")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<List<ExpenseDTO>> getExpensesByDateRange(
+    public ResponseEntity<List<ExpenseResponseDTO>> getExpensesByDateRange(
             @RequestParam("start") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME, fallbackPatterns = {"yyyy-MM-dd"}) LocalDate start,
             @RequestParam("end") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME, fallbackPatterns = {"yyyy-MM-dd"}) LocalDate end) {
         log.info("Fetching expenses between {} and {}", start, end);
