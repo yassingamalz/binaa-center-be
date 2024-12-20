@@ -180,6 +180,21 @@ CREATE TABLE IF NOT EXISTS rewards (
     status ENUM('ACTIVE','INACTIVE')
 );
 
+CREATE TABLE notifications (
+    notification_id BIGSERIAL PRIMARY KEY,
+    user_id BIGINT NOT NULL,
+    type VARCHAR(50) NOT NULL,
+    title VARCHAR(255) NOT NULL,
+    message TEXT NOT NULL,
+    status VARCHAR(20) NOT NULL DEFAULT 'UNREAD',
+    data JSONB,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    read_at TIMESTAMP,
+    archived BOOLEAN DEFAULT false,
+    archived_at TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(user_id)
+);
+
 -- Add indexes for better performance
 CREATE INDEX idx_cases_name ON cases(name);
 CREATE INDEX idx_cases_status ON cases(status);
@@ -187,3 +202,6 @@ CREATE INDEX idx_sessions_date ON sessions(session_date);
 CREATE INDEX idx_payments_date ON payments(payment_date);
 CREATE INDEX idx_appointments_datetime ON appointments(date_time);
 CREATE INDEX idx_fidelity_points_status ON fidelity_points(status);
+CREATE INDEX idx_notifications_user_status ON notifications(user_id, status);
+CREATE INDEX idx_notifications_user_archived ON notifications(user_id, archived);
+CREATE INDEX idx_notifications_created_at ON notifications(created_at);
