@@ -45,6 +45,12 @@ public class NotificationController {
         return ResponseEntity.ok().build();
     }
 
+    @PutMapping("/read-all")
+    public ResponseEntity<Void> markAllAsRead(@AuthenticationPrincipal UserDetails userDetails) {
+        notificationService.markAllAsRead(getUserId(userDetails));
+        return ResponseEntity.ok().build();
+    }
+
     private Long getUserId(UserDetails userDetails) {
         // Implement based on your UserDetails implementation
         return ((CustomUserDetails) userDetails).getUser().getUserId();

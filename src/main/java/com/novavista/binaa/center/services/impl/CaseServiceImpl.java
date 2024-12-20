@@ -4,6 +4,8 @@ import com.novavista.binaa.center.dto.lookup.CaseLookupDTO;
 import com.novavista.binaa.center.dto.request.CaseDTO;
 import com.novavista.binaa.center.entity.Case;
 import com.novavista.binaa.center.enums.CaseStatus;
+import com.novavista.binaa.center.enums.NotificationType;
+import com.novavista.binaa.center.event.NotificationEvent;
 import com.novavista.binaa.center.exceptions.ResourceNotFoundException;
 import com.novavista.binaa.center.exceptions.ValidationException;
 import com.novavista.binaa.center.mapper.CaseMapper;
@@ -16,7 +18,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -25,11 +29,14 @@ import java.util.stream.Collectors;
 public class CaseServiceImpl implements CaseService {
     private final CaseRepository caseRepository;
     private final CaseMapper caseMapper;
+    private final NotificationEventPublisher notificationPublisher;
+
 
     @Autowired
-    public CaseServiceImpl(CaseRepository caseRepository, CaseMapper caseMapper) {
+    public CaseServiceImpl(CaseRepository caseRepository, CaseMapper caseMapper,NotificationEventPublisher notificationPublisher) {
         this.caseRepository = caseRepository;
         this.caseMapper = caseMapper;
+        this.notificationPublisher = notificationPublisher ;
     }
 
     @Override
@@ -44,6 +51,21 @@ public class CaseServiceImpl implements CaseService {
 
         Case caseEntity = caseMapper.toEntity(caseDTO);
         Case savedCase = caseRepository.save(caseEntity);
+
+        // Publish notification event
+        notificationPublisher.publishNotificationEvent(
+                NotificationEvent.builder()
+                        .type(NotificationType.CASE)
+                        .title("إنشاء حالة جديدة")
+                        .message("تم إنشاء حالة جديدة برقم " + savedCase.getCaseId())
+                        .data(Map.of(
+                                "caseId", savedCase.getCaseId(),
+                                "caseCreatedDate", savedCase.getAdmissionDate(),
+                                "caseName", savedCase.getName()
+                        ))
+                        .build()
+        );
+
         log.info("Case created with ID: {}", savedCase.getCaseId());
         return caseMapper.toDto(savedCase);
     }
@@ -52,7 +74,7 @@ public class CaseServiceImpl implements CaseService {
     @Transactional(readOnly = true)
     public CaseDTO getCaseById(Long id) {
         return caseRepository.findById(id)
-                .map(caseEntity -> caseMapper.toDto(caseEntity))
+                .map(caseMapper::toDto)
                 .orElseThrow(() -> new ResourceNotFoundException("Case not found"));
     }
 
@@ -61,7 +83,7 @@ public class CaseServiceImpl implements CaseService {
     public List<CaseDTO> getAllCases() {
         log.info("Fetching all cases");
         return caseRepository.findAll().stream()
-                .map(caseEntity -> caseMapper.toDto(caseEntity))
+                .map(caseMapper::toDto)
                 .collect(Collectors.toList());
     }
 

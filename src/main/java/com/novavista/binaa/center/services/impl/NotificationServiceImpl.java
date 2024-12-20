@@ -9,14 +9,9 @@ import com.novavista.binaa.center.entity.Notification;
 import com.novavista.binaa.center.enums.NotificationStatus;
 import com.novavista.binaa.center.exceptions.ResourceNotFoundException;
 import com.novavista.binaa.center.mapper.NotificationMapper;
-import com.novavista.binaa.center.repository.CaseRepository;
 import com.novavista.binaa.center.repository.NotificationRepository;
-import com.novavista.binaa.center.repository.PaymentRepository;
-import com.novavista.binaa.center.repository.SessionRepository;
 import com.novavista.binaa.center.services.NotificationService;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @Service
 @Transactional
@@ -65,7 +61,7 @@ public class NotificationServiceImpl implements NotificationService {
     @Override
     public NotificationDTO createNotification(NotificationRequest request) {
         Notification entity = Notification.builder()
-                .userId(request.getUserId())
+                .userId(Objects.requireNonNullElse(request.getUserId(),1L))
                 .type(request.getType())
                 .title(request.getTitle())
                 .message(request.getMessage())
@@ -123,7 +119,7 @@ public class NotificationServiceImpl implements NotificationService {
                 break;
 
             case DELETE:
-                notificationRepository.deleteByIdInAndUserId(
+                notificationRepository.deleteByNotificationIdInAndUserId(
                         request.getNotificationIds(),
                         userId
                 );
@@ -138,11 +134,11 @@ public class NotificationServiceImpl implements NotificationService {
     @Transactional
     public void deleteNotification(Long userId, Long notificationId) {
         validateNotificationIds(userId, List.of(notificationId));
-        notificationRepository.deleteByIdAndUserId(notificationId, userId);
+        notificationRepository.deleteByNotificationIdAndUserId(notificationId, userId);
     }
 
     private void validateNotificationIds(Long userId, List<Long> notificationIds) {
-        long count = notificationRepository.countByIdInAndUserId(notificationIds, userId);
+        long count = notificationRepository.countByNotificationIdInAndUserId(notificationIds, userId);
         if (count != notificationIds.size()) {
             throw new ResourceNotFoundException("One or more notifications not found or don't belong to the user");
         }

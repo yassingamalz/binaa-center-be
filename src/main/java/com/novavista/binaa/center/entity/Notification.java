@@ -40,8 +40,7 @@ public class Notification {
     @Column(nullable = false)
     private NotificationStatus status;
 
-    // For Hibernate 6+
-    @Column(columnDefinition = "jsonb")
+    @Column
     @JdbcTypeCode(SqlTypes.JSON)
     private String data;
 

@@ -181,13 +181,13 @@ CREATE TABLE IF NOT EXISTS rewards (
 );
 
 CREATE TABLE notifications (
-    notification_id BIGSERIAL PRIMARY KEY,
-    user_id BIGINT NOT NULL,
+    notification_id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    user_id INT UNSIGNED NOT NULL,
     type VARCHAR(50) NOT NULL,
     title VARCHAR(255) NOT NULL,
     message TEXT NOT NULL,
     status VARCHAR(20) NOT NULL DEFAULT 'UNREAD',
-    data JSONB,
+    data JSON,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     read_at TIMESTAMP,
     archived BOOLEAN DEFAULT false,
