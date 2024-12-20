@@ -14,8 +14,16 @@ import java.util.List;
 public interface NotificationRepository extends JpaRepository<Notification, Long> {
     List<Notification> findByUserIdAndArchivedOrderByCreatedAtDesc(Long userId, boolean archived);
 
-    @Query("SELECT n FROM Notification n WHERE n.userId = :userId AND n.status = 'UNREAD' AND n.archived = false")
-    List<Notification> findUnreadByUser(@Param("userId") Long userId);
+    @Query("SELECT COUNT(n) FROM Notification n WHERE n.notificationId IN :ids AND n.userId = :userId")
+    long countByNotificationIdInAndUserId(@Param("ids") List<Long> ids, @Param("userId") Long userId);
+
+    @Modifying
+    @Query("DELETE FROM Notification n WHERE n.notificationId = :id AND n.userId = :userId")
+    void deleteByNotificationIdAndUserId(@Param("id") Long id, @Param("userId") Long userId);
+
+    @Modifying
+    @Query("DELETE FROM Notification n WHERE n.notificationId IN :ids AND n.userId = :userId")
+    void deleteByNotificationIdInAndUserId(@Param("ids") List<Long> ids, @Param("userId") Long userId);
 
     @Query("SELECT COUNT(n) FROM Notification n WHERE n.userId = :userId AND n.status = 'UNREAD' AND n.archived = false")
     long countUnreadByUser(@Param("userId") Long userId);
@@ -29,30 +37,20 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
     int archiveNotifications(@Param("ids") List<Long> ids, @Param("archived") boolean archived, @Param("userId") Long userId);
 
     @Modifying
-    @Query("DELETE FROM NotificationEntity n WHERE n.id = :id AND n.userId = :userId")
-    void deleteByIdAndUserId(@Param("id") Long id, @Param("userId") Long userId);
-
-    @Modifying
-    @Query("DELETE FROM NotificationEntity n WHERE n.id IN :ids AND n.userId = :userId")
-    void deleteByIdInAndUserId(@Param("ids") List<Long> ids, @Param("userId") Long userId);
-
-    long countByIdInAndUserId(List<Long> ids, Long userId);
-
-    @Modifying
-    @Query("UPDATE NotificationEntity n SET n.status = 'READ', n.readAt = CURRENT_TIMESTAMP " +
+    @Query("UPDATE Notification n SET n.status = 'READ', n.readAt = CURRENT_TIMESTAMP " +
             "WHERE n.userId = :userId AND n.archived = false AND n.status = 'UNREAD'")
     void markAllAsRead(@Param("userId") Long userId);
 
     @Modifying
-    @Query("UPDATE NotificationEntity n SET n.archived = true, n.archivedAt = CURRENT_TIMESTAMP " +
+    @Query("UPDATE Notification n SET n.archived = true, n.archivedAt = CURRENT_TIMESTAMP " +
             "WHERE n.userId = :userId AND n.archived = false")
     void archiveAllByUser(@Param("userId") Long userId);
 
     @Modifying
-    @Query("DELETE FROM NotificationEntity n WHERE n.userId = :userId")
+    @Query("DELETE FROM Notification n WHERE n.userId = :userId")
     void deleteAllByUser(@Param("userId") Long userId);
 
     @Modifying
-    @Query("DELETE FROM NotificationEntity n WHERE n.userId = :userId AND n.archived = true")
+    @Query("DELETE FROM Notification n WHERE n.userId = :userId AND n.archived = true")
     void deleteAllArchivedByUser(@Param("userId") Long userId);
 }

@@ -6,6 +6,8 @@ import com.novavista.binaa.center.entity.Case;
 import com.novavista.binaa.center.entity.Session;
 import com.novavista.binaa.center.entity.Staff;
 import com.novavista.binaa.center.enums.AttendanceStatus;
+import com.novavista.binaa.center.enums.NotificationType;
+import com.novavista.binaa.center.event.NotificationEvent;
 import com.novavista.binaa.center.exceptions.ResourceNotFoundException;
 import com.novavista.binaa.center.exceptions.ValidationException;
 import com.novavista.binaa.center.mapper.SessionMapper;
@@ -20,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,16 +35,21 @@ public class SessionServiceImpl implements SessionService {
     private final CaseRepository caseRepository;
     private final StaffRepository staffRepository;
     private final SessionMapper sessionMapper;
+    private final NotificationEventPublisher notificationPublisher;
+
 
     @Autowired
     public SessionServiceImpl(SessionRepository sessionRepository,
                               CaseRepository caseRepository,
                               StaffRepository staffRepository,
-                              SessionMapper sessionMapper) {
+                              SessionMapper sessionMapper,
+                              NotificationEventPublisher notificationPublisher
+    ) {
         this.sessionRepository = sessionRepository;
         this.caseRepository = caseRepository;
         this.staffRepository = staffRepository;
         this.sessionMapper = sessionMapper;
+        this.notificationPublisher = notificationPublisher;
     }
 
     @Override
@@ -77,6 +85,22 @@ public class SessionServiceImpl implements SessionService {
 
         Session savedSession = sessionRepository.save(session);
         log.info("Created session with ID: {}", savedSession.getSessionId());
+
+        // Publish notification event
+        notificationPublisher.publishNotificationEvent(
+                NotificationEvent.builder()
+                        .userId(session.getStaff().getStaffId())
+                        .type(NotificationType.SESSION)
+                        .title("موعد جلسة جديد")
+                        .message("تم تحديد موعد جلسة جديدة في " +
+                                session.getSessionDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")))
+                        .data(Map.of(
+                                "sessionId", session.getSessionId(),
+                                "caseId", session.getCaseInfo().getCaseId(),
+                                "sessionDate", session.getSessionDate()
+                        ))
+                        .build()
+        );
 
         Session sessionWithDetails = sessionRepository.findByIdWithDetails(savedSession.getSessionId())
                 .orElseThrow(() -> new ResourceNotFoundException("Created session not found"));

@@ -123,7 +123,7 @@ public class NotificationServiceImpl implements NotificationService {
                 break;
 
             case DELETE:
-                notificationRepository.deleteByIdInAndUserId(
+                notificationRepository.deleteByNotificationIdInAndUserId(
                         request.getNotificationIds(),
                         userId
                 );
@@ -138,11 +138,11 @@ public class NotificationServiceImpl implements NotificationService {
     @Transactional
     public void deleteNotification(Long userId, Long notificationId) {
         validateNotificationIds(userId, List.of(notificationId));
-        notificationRepository.deleteByIdAndUserId(notificationId, userId);
+        notificationRepository.deleteByNotificationIdAndUserId(notificationId, userId);
     }
 
     private void validateNotificationIds(Long userId, List<Long> notificationIds) {
-        long count = notificationRepository.countByIdInAndUserId(notificationIds, userId);
+        long count = notificationRepository.countByNotificationIdInAndUserId(notificationIds, userId);
         if (count != notificationIds.size()) {
             throw new ResourceNotFoundException("One or more notifications not found or don't belong to the user");
         }
