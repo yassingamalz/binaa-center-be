@@ -60,14 +60,35 @@ public class PaymentServiceImpl implements PaymentService {
                     .orElseThrow(() -> new ResourceNotFoundException("Session not found"));
         }
 
+        // Generate unique invoice number
+        String invoiceNumber = generateInvoiceNumber();
+
         Payment payment = modelMapper.map(paymentDTO, Payment.class);
         payment.setCaseInfo(caseEntity);
         payment.setSession(session);
         payment.setPaymentDate(LocalDateTime.now());
+        payment.setInvoiceNumber(invoiceNumber);
 
         Payment savedPayment = paymentRepository.save(payment);
-        log.info("Created payment with ID: {}", savedPayment.getPaymentId());
+        log.info("Created payment with ID: {} and invoice number {}", savedPayment.getPaymentId(), invoiceNumber);
         return modelMapper.map(savedPayment, PaymentDTO.class);
+    }
+
+    private String generateInvoiceNumber() {
+        // Get the current year
+        String year = String.valueOf(LocalDate.now().getYear());
+
+        // Count existing payments for this year to generate sequential number
+        long paymentCount = paymentRepository.countByPaymentDateBetween(
+                LocalDateTime.of(LocalDate.now().getYear(), 1, 1, 0, 0),
+                LocalDateTime.of(LocalDate.now().getYear(), 12, 31, 23, 59, 59)
+        ) + 1;
+
+        // Format the sequential number with leading zeros
+        String sequentialNumber = String.format("%03d", paymentCount);
+
+        // Combine to create invoice number
+        return String.format("INV-%s-%s", year, sequentialNumber);
     }
 
     @Override

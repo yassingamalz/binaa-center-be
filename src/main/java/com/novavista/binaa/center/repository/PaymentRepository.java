@@ -16,6 +16,7 @@ public interface PaymentRepository extends JpaRepository<Payment, Long> {
     List<Payment> findByCaseInfo(Case caseInfo);
     List<Payment> findByPaymentStatus(PaymentStatus status);
     List<Payment> findByPaymentDateBetween(LocalDateTime start, LocalDateTime end);
+    long countByPaymentDateBetween(LocalDateTime start, LocalDateTime end);
 
 }
 
