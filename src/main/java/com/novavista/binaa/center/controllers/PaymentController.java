@@ -14,9 +14,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
-
-
-// PaymentController.java
 @RestController
 @RequestMapping("/api/payments")
 @Slf4j
@@ -26,6 +23,14 @@ public class PaymentController {
     @Autowired
     public PaymentController(PaymentService paymentService) {
         this.paymentService = paymentService;
+    }
+
+
+    @GetMapping
+    @PreAuthorize("hasAnyRole('ADMIN', 'STAFF')")
+    public ResponseEntity<List<PaymentDTO>> getAllPayments() {
+        log.info("Fetching all payments");
+        return ResponseEntity.ok(paymentService.getAllPayments());
     }
 
     @PostMapping

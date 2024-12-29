@@ -72,6 +72,15 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     @Transactional(readOnly = true)
+    public List<PaymentDTO> getAllPayments() {
+        log.info("Fetching all payments");
+        return paymentRepository.findAll().stream()
+                .map(payment -> modelMapper.map(payment, PaymentDTO.class))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public PaymentDTO getPaymentById(Long id) {
         return paymentRepository.findById(id)
                 .map(payment -> modelMapper.map(payment, PaymentDTO.class))

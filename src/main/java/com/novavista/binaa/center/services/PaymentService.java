@@ -8,6 +8,8 @@ import java.util.List;
 
 public interface PaymentService {
     PaymentDTO createPayment(PaymentDTO paymentDTO);
+    List<PaymentDTO> getAllPayments();
+
     PaymentDTO getPaymentById(Long id);
     List<PaymentDTO> getPaymentsByCase(Long caseId);
     List<PaymentDTO> getPaymentsByStatus(PaymentStatus status);
