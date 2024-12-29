@@ -31,6 +31,7 @@ public class JwtTokenProvider {
 
         return Jwts.builder()
                 .setSubject(user.getUsername())
+                .claim("username", user.getUsername())
                 .claim("userId", user.getUserId())
                 .claim("role", user.getRole().name())
                 .setIssuedAt(new Date())
